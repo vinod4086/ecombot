@@ -1,0 +1,62 @@
+[
+  {
+    "id": "PRD-101",
+    "name": "Laptop Stand",
+    "category": "Accessories",
+    "price": "$45.99",
+    "description": "Adjustable aluminum laptop stand for improved ergonomics",
+    "features": ["Adjustable height", "Durable aluminum", "Lightweight", "Folds flat for travel"],
+    "warranty": "1 year",
+    "shipping": "Free shipping on orders over $50",
+    "compatibility": "All laptop sizes up to 17 inches",
+    "returns": "30-day money-back guarantee"
+  },
+  {
+    "id": "PRD-102",
+    "name": "USB-C Cable",
+    "category": "Cables",
+    "price": "$6.49",
+    "description": "High-speed USB-C charging and data transfer cable",
+    "features": ["High-speed data transfer", "Fast charging", "10ft length", "Durable braided design"],
+    "warranty": "2 years",
+    "shipping": "Free shipping on orders over $50",
+    "compatibility": "Any device with USB-C port",
+    "returns": "30-day money-back guarantee"
+  },
+  {
+    "id": "PRD-103",
+    "name": "Mechanical Keyboard",
+    "category": "Keyboards",
+    "price": "$129.99",
+    "description": "RGB Mechanical Keyboard with Cherry MX switches",
+    "features": ["RGB LED backlighting", "Cherry MX switches", "Programmable keys", "USB-C connection"],
+    "warranty": "2 years",
+    "shipping": "Free shipping",
+    "compatibility": "Windows, Mac, Linux",
+    "returns": "30-day money-back guarantee"
+  },
+  {
+    "id": "PRD-104",
+    "name": "Wireless Mouse",
+    "category": "Peripherals",
+    "price": "$34.99",
+    "description": "Ergonomic wireless mouse with precision tracking",
+    "features": ["2.4GHz wireless", "Ergonomic design", "7-button layout", "Adjustable DPI"],
+    "warranty": "1 year",
+    "shipping": "Free shipping on orders over $50",
+    "compatibility": "Windows, Mac, Linux",
+    "returns": "30-day money-back guarantee"
+  },
+  {
+    "id": "PRD-105",
+    "name": "USB Hub",
+    "category": "Accessories",
+    "price": "$25.99",
+    "description": "7-port USB 3.0 hub with power adapter",
+    "features": ["7 USB 3.0 ports", "Power adapter included", "High-speed data transfer", "Compact design"],
+    "warranty": "1 year",
+    "shipping": "Free shipping on orders over $50",
+    "compatibility": "All devices with USB port",
+    "returns": "30-day money-back guarantee"
+  }
+]
