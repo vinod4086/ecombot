@@ -1,9 +1,12 @@
 """Order management tools for eComBot - Day 03 and Day 04 implementation"""
 from typing import Dict, Any
+import re
 from langchain.tools import tool
 import logging
 
 logger = logging.getLogger(__name__)
+
+ORDER_ID_PATTERN = re.compile(r"^ORD-\d{3}$")
 
 # Day 03: Mock orders for in-memory testing
 MOCK_ORDERS = {
@@ -50,6 +53,10 @@ def get_order_status(order_id: str) -> Dict[str, Any]:
     # Validate order ID format
     if not order_id or not isinstance(order_id, str):
         return {"error": "Invalid order ID format. Please provide a valid order ID."}
+    if not ORDER_ID_PATTERN.match(order_id.strip().upper()):
+        return {"error": "Invalid order ID format. Expected ORD-001 style value."}
+
+    order_id = order_id.strip().upper()
     
     # Check for order in mock data
     if order_id in MOCK_ORDERS:
@@ -77,6 +84,10 @@ def cancel_order(order_id: str) -> Dict[str, Any]:
     # Validate order ID
     if not order_id or not isinstance(order_id, str):
         return {"error": "Invalid order ID format."}
+    if not ORDER_ID_PATTERN.match(order_id.strip().upper()):
+        return {"error": "Invalid order ID format. Expected ORD-001 style value."}
+
+    order_id = order_id.strip().upper()
     
     # Check if order exists
     if order_id not in MOCK_ORDERS:

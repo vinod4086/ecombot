@@ -1,5 +1,6 @@
 """Support agent implementation for eComBot - Core agent logic across all days"""
 import logging
+import re
 from typing import Optional, Dict, Any
 from langchain.tools import tool
 from langchain_core.messages import BaseMessage, HumanMessage
@@ -146,14 +147,29 @@ Guidelines:
         # Mock responses for testing
         message_lower = user_message.lower()
         
+        if "cancel" in message_lower and "ord-" in message_lower:
+            order_id = self._extract_order_id(user_message)
+            if not order_id:
+                return "Please share a valid order ID in the format ORD-001 before I can process cancellation."
+
+            pending = self.get_session_state("pending_cancellation")
+            if pending == order_id and ("yes" in message_lower or "confirm" in message_lower):
+                result = cancel_order.invoke({"order_id": order_id})
+                self.update_session_state("pending_cancellation", None)
+                if "error" in result:
+                    return result["error"]
+                return result["message"]
+
+            self.update_session_state("pending_cancellation", order_id)
+            return (
+                f"I can cancel {order_id}, but this action is destructive. "
+                f"Please reply with 'yes confirm {order_id}' to proceed."
+            )
+
         if "order" in message_lower:
             # Extract order ID if present
             if "ord-" in message_lower:
-                order_id = None
-                for word in user_message.split():
-                    if word.startswith("ORD-") or word.startswith("ord-"):
-                        order_id = word.upper()
-                        break
+                order_id = self._extract_order_id(user_message)
                 
                 if order_id:
                     result = get_order_status.invoke({"order_id": order_id})
@@ -178,6 +194,13 @@ Guidelines:
             customer_name = self.get_session_state("customer_name", "")
             name_part = f"{customer_name.title()}, " if customer_name else ""
             return f"{name_part}I'm here to help with orders, products, and general support. How can I assist you?"
+
+    def _extract_order_id(self, text: str) -> Optional[str]:
+        """Extract and normalize order ID from free text."""
+        match = re.search(r"ORD-\d{3}", text.upper())
+        if not match:
+            return None
+        return match.group(0)
 
 
 def create_support_agent(

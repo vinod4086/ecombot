@@ -1,7 +1,15 @@
 """Main runner script for eComBot"""
 import logging
 import argparse
-from src.agents.support_agent import create_support_agent
+import os
+import sys
+
+# Allow running as `python scripts/run.py` by adding repo root to sys.path.
+PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+if PROJECT_ROOT not in sys.path:
+    sys.path.insert(0, PROJECT_ROOT)
+
+from src.agents.orchestrator import create_orchestrator_agent
 
 logging.basicConfig(
     level=logging.INFO,
@@ -25,7 +33,7 @@ def interactive_mode(agent):
                 continue
             
             response = agent.process_user_input(user_input)
-            print(f"Agent: {response}\n")
+            print(f"Agent ({response.get('agent', 'orchestrator')}): {response.get('text', '')}\n")
         except KeyboardInterrupt:
             logger.info("\nExiting...")
             break
@@ -38,7 +46,12 @@ def batch_mode(agent, queries):
     for query in queries:
         logger.info(f"Query: {query}")
         response = agent.process_user_input(query)
-        logger.info(f"Response: {response}\n")
+        logger.info(
+            "Response: route=%s agent=%s text=%s\n",
+            response.get("route"),
+            response.get("agent"),
+            response.get("text"),
+        )
 
 
 def main():
@@ -50,28 +63,14 @@ def main():
         help="Execution mode"
     )
     parser.add_argument(
-        "--instruction-file",
-        help="Path to instruction file"
-    )
-    parser.add_argument(
         "--queries",
         nargs="+",
         help="Queries for batch mode"
     )
-    parser.add_argument(
-        "--route-hint",
-        choices=["fast-faq", "deep-support"],
-        default="fast-faq",
-        help="Routing hint for LLM gateway (Day 07)"
-    )
-
     args = parser.parse_args()
 
-    # Create agent
-    agent = create_support_agent(
-        instruction_file=args.instruction_file,
-        route_hint=args.route_hint
-    )
+    # Create orchestrator agent as primary entrypoint (Day 09+)
+    agent = create_orchestrator_agent()
 
     if args.mode == "interactive":
         interactive_mode(agent)

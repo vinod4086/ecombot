@@ -3,7 +3,7 @@
 ![eComBot](https://img.shields.io/badge/version-5.0.0-blue)
 ![Status](https://img.shields.io/badge/status-production--ready-green)
 
-An advanced e-commerce support agent implementing the complete Google ADK journey from Day 01 through Day 08. Features tool calling, session management, RAG-based knowledge grounding, LiteLLM gateway integration, and FastMCP external service integrations.
+An advanced e-commerce support agent implementing the complete Google ADK journey from Day 01 through Day 13. Features multi-agent orchestration, Chainlit UI, guardrails, observability, evaluation scaffolding, and voice loop integration.
 
 ## 📋 Table of Contents
 
@@ -28,6 +28,11 @@ eComBot is a production-ready e-commerce support agent that demonstrates:
 - **Day 05-06**: RAG-based knowledge grounding with ChromaDB
 - **Day 07**: LiteLLM gateway with intelligent routing
 - **Day 08**: FastMCP external service integrations
+- **Day 09**: Multi-agent orchestration (Orchestrator + Support + Sales)
+- **Day 10**: Chainlit generative UI with cards, steps, and actions
+- **Day 11**: Voice loop scaffold (STT -> Agents -> TTS)
+- **Day 12**: ReAct-style reasoning and observability hooks
+- **Day 13**: Guardrails and production-readiness checklist
 
 ### Key Features
 
@@ -81,7 +86,9 @@ eComBot is a production-ready e-commerce support agent that demonstrates:
 ecombot/
 ├── src/
 │   ├── agents/
-│   │   ├── support_agent.py          # Core agent implementation (Days 01-07)
+│   │   ├── support_agent.py          # Support specialist agent
+│   │   ├── sales_agent.py            # Sales specialist with reasoning loop
+│   │   ├── orchestrator.py           # Primary entrypoint router
 │   │   ├── support_instructions_v1.txt # Professional variant
 │   │   ├── support_instructions_v2.txt # Friendly variant
 │   │   └── support_instructions_v3.txt # Technical variant
@@ -96,6 +103,13 @@ ecombot/
 │   ├── rag/
 │   │   ├── embed_catalog.py          # ChromaDB embedding (Day 05-06)
 │   │   └── retriever.py              # RAG retrieval (Day 05-06)
+│   ├── guards/
+│   │   ├── input_guard.py            # Prompt-injection checks
+│   │   └── output_guard.py           # PII/off-topic output controls
+│   ├── ui/
+│   │   └── chainlit_app.py           # Chainlit UI entrypoint
+│   ├── voice/
+│   │   └── voice_loop.py             # Voice interaction loop scaffold
 │   └── config/
 │       └── settings.py               # Configuration management
 ├── data/
@@ -170,9 +184,14 @@ python scripts/run.py --mode interactive
 python scripts/run.py --mode batch --queries "Hello" "Where is my order?"
 ```
 
-**With Custom Instruction:**
+**Chainlit UI (Day 10):**
 ```bash
-python scripts/run.py --instruction-file src/agents/support_instructions_v2.txt
+chainlit run src/ui/chainlit_app.py
+```
+
+**Voice Loop Demo (Day 11):**
+```bash
+python -m src.voice.voice_loop
 ```
 
 ---
@@ -275,6 +294,38 @@ route_hint = "deep-support"
 ```bash
 python -m src.services.mcp_server
 ```
+
+### Day 09: Multi-Agent Orchestration
+
+- Added `OrchestratorAgent` as main entrypoint for routing.
+- Added dedicated `SalesAgent` with recommendation responsibilities.
+- Added mixed intent planner-executor flow.
+
+### Day 10: Chainlit Generative UI
+
+- Added `src/ui/chainlit_app.py` with:
+        - Structured cards for order and product outputs
+        - Visible route step rendering
+        - Action buttons for common follow-up flows
+
+### Day 11: Voice Interface Scaffold
+
+- Added `src/voice/voice_loop.py`:
+        - Turn-based voice interaction loop
+        - Stage latency logging (capture/STT/orchestration/TTS)
+        - Critical order ID confirmation flow
+
+### Day 12: Reasoning + Observability
+
+- Sales agent now records reasoning steps across recommendation flow.
+- Added `src/services/observability.py` for trace IDs and latency logs.
+- Added PromptFoo scaffold: `promptfooconfig.json`.
+
+### Day 13: Guardrails + Production Readiness
+
+- Added input and output guardrails under `src/guards/`.
+- Added destructive action confirmation in support cancellation flow.
+- Added `PRODUCTION_CHECKLIST.md` for handoff readiness.
 
 ---
 

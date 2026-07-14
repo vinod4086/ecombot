@@ -70,3 +70,8 @@ Thumbs.db
 chroma_data/
 *.sqlite
 *.sqlite3
+
+# Chainlit local artifacts
+.chainlit/
+chainlit.md
+.files/

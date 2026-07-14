@@ -1,9 +1,12 @@
 """Product management tools for eComBot - Day 04 implementation"""
 from typing import Dict, Any, List
+import re
 from langchain.tools import tool
 import logging
 
 logger = logging.getLogger(__name__)
+
+PRODUCT_ID_PATTERN = re.compile(r"^PRD-\d{3}$")
 
 # Mock products database
 MOCK_PRODUCTS = {
@@ -77,6 +80,10 @@ def check_stock(product_id: str) -> Dict[str, Any]:
     
     if not product_id or not isinstance(product_id, str):
         return {"error": "Invalid product ID provided."}
+
+    product_id = product_id.strip().upper()
+    if not PRODUCT_ID_PATTERN.match(product_id):
+        return {"error": "Invalid product ID format. Expected PRD-101 style value."}
     
     if product_id in MOCK_PRODUCTS:
         product = MOCK_PRODUCTS[product_id]
